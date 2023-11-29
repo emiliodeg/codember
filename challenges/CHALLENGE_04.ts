@@ -5,26 +5,25 @@ const getValidChecksumFiles = (data: string) => {
     .split("\n")
     .map((line) => line.split("-"))
     .filter(([filename, checksum]) => {
-      const charCount = Array.from(filename).reduce((acum, curr) => {
-        const position = acum.findIndex(([char]) => curr === char);
+      const charCount = Array.from(filename)
+        .reduce((acum, curr) => {
+          const position = acum.findIndex(([char]) => curr === char);
 
-        if (position < 0) {
-          acum.push([curr, 1]);
-        } else {
-          acum[position][1]++;
-        }
+          if (position < 0) {
+            acum.push([curr, 1]);
+          } else {
+            acum[position][1]++;
+          }
 
-        return acum;
-      }, [] as [string, number][]).filter(([_, count]) => count === 1);
+          return acum;
+        }, [] as [string, number][])
+        .filter(([_, count]) => count === 1);
 
-      const result = Array.from(checksum).every((checkChar) => {
+      return Array.from(checksum).every((checkChar) => {
         const [char] = charCount.shift() ?? [];
 
         return char === checkChar;
       });
-
-//      console.log({ filename, checksum, xxx, yyy: Object.entries(charCount), result });
-      return result;
     });
 };
 
